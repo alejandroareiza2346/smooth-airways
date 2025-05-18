@@ -1,0 +1,295 @@
+body {
+    background: linear-gradient(135deg, #1a202c, #2d3748);
+    color: white;
+    font-family: 'Arial', sans-serif;
+    overflow-x: hidden;
+}
+
+.hero {
+    animation: fadeIn 2s ease-in-out;
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+    background-image: url('../images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #f6ad55;
+    animation: slideInFromLeft 1.5s ease-out;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    color: #e2e8f0;
+    margin-bottom: 2rem;
+    animation: slideInFromRight 1.5s ease-out;
+}
+
+.hero a {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.hero a:hover {
+    transform: scale(1.1);
+}
+
+.explore {
+    background-color: #f6ad55;
+    color: black;
+}
+
+.explore:hover {
+    background-color: #dd6b20;
+}
+
+.profile {
+    background-color: #2d3748;
+    color: white;
+}
+
+.profile:hover {
+    background-color: #4a5568;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Advanced Card Styles */
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    padding: 1.5rem;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .image-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+    }
+}
+
+.destination-card,
+.aircraft-card {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: rgba(17, 24, 39, 0.7);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 400px;
+    transform-origin: center;
+    perspective: 1000px;
+}
+
+.destination-card:hover,
+.aircraft-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.destination-card::after,
+.aircraft-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.8) 100%
+    );
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.destination-card:hover::after,
+.aircraft-card:hover::after {
+    opacity: 0.9;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: brightness(0.9);
+}
+
+.destination-card:hover .card-image,
+.aircraft-card:hover .card-image {
+    transform: scale(1.15);
+    filter: brightness(1);
+}
+
+.card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.8) 20%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.destination-card:hover .card-overlay,
+.aircraft-card:hover .card-overlay {
+    transform: translateY(0);
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.95) 0%,
+        rgba(0, 0, 0, 0.85) 20%,
+        rgba(0, 0, 0, 0.1) 100%
+    );
+}
+
+.card-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #f6ad55;
+    margin-bottom: 0.75rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    transform: translateY(10px);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-description {
+    font-size: 1rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.destination-card:hover .card-title,
+.aircraft-card:hover .card-title {
+    transform: translateY(0);
+}
+
+.destination-card:hover .card-description,
+.aircraft-card:hover .card-description {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Section Styles */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f6ad55;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #f6ad55, transparent);
+}
+
+.section-description {
+    text-align: center;
+    color: #e2e8f0;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    font-size: 1.25rem;
+    line-height: 1.7;
+}
+
+/* Parallax Backgrounds */
+.parallax-section {
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 0;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.parallax-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(17, 24, 39, 0.8);
+    z-index: 1;
+}
+
+.parallax-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeInUp {
+    animation: fadeInUp 0.6s ease-out forwards;
+}

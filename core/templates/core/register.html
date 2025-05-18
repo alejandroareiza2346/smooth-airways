@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Registro - Smooth Airlines{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-20 bg-black">
+    <div class="container mx-auto px-4">
+        <div class="max-w-md mx-auto bg-gray-900 rounded-lg shadow-lg p-8">
+            <h2 class="text-3xl font-bold text-gold mb-6 text-center">Registro</h2>
+            
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                <div class="p-4 {% if message.tags == 'success' %}bg-green-800{% else %}bg-red-800{% endif %} text-white rounded-lg">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="text-red-500 text-sm mt-1">
+                        {{ field.errors.0 }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                {% if form.non_field_errors %}
+                <div class="text-red-500 text-sm">
+                    {{ form.non_field_errors.0 }}
+                </div>
+                {% endif %}
+
+                <div>
+                    <button type="submit" class="w-full btn-gold py-3 rounded-lg font-semibold">
+                        Registrarse
+                    </button>
+                </div>
+            </form>
+
+            <p class="mt-4 text-center text-gray-400">
+                ¿Ya tienes una cuenta? 
+                <a href="{% url 'core:login' %}" class="text-gold hover:text-gold-600">
+                    Inicia Sesión
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

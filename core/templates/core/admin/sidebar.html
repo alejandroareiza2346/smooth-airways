@@ -1,0 +1,14 @@
+<aside class="w-64 bg-gray-900 p-6 flex flex-col space-y-6 min-h-screen">
+    <h2 class="text-2xl font-bold text-gold mb-8">Admin</h2>
+    <nav class="flex-1 space-y-4">
+        <a href="{% url 'admin_dashboard' %}" class="block text-gray-300 hover:text-gold">Dashboard</a>
+        <a href="{% url 'admin_users_list' %}" class="block text-gray-300 hover:text-gold">Usuarios</a>
+        <a href="{% url 'admin_flights_list' %}" class="block text-gray-300 hover:text-gold">Vuelos</a>
+        <a href="{% url 'admin_hotels_list' %}" class="block text-gray-300 hover:text-gold">Hoteles</a>
+        <a href="{% url 'admin_payments_list' %}" class="block text-gray-300 hover:text-gold">Pagos</a>
+        <a href="{% url 'admin_experiences_list' %}" class="block text-gray-300 hover:text-gold">Experiencias</a>
+    </nav>
+    <div class="mt-auto">
+        <a href="/" class="block text-gray-500 hover:text-gold text-sm">Volver al sitio</a>
+    </div>
+</aside> 

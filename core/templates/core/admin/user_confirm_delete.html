@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Eliminar Usuario - Panel de Administración{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-black flex">
+    <!-- Menú lateral -->
+    <aside class="w-64 bg-gray-900 p-6 flex flex-col space-y-6 min-h-screen">
+        <h2 class="text-2xl font-bold text-gold mb-8">Admin</h2>
+        <nav class="flex-1 space-y-4">
+            <a href="{% url 'admin_dashboard' %}" class="block text-gray-300 hover:text-gold">Dashboard</a>
+            <a href="{% url 'admin_users_list' %}" class="block text-gold font-semibold">Usuarios</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Vuelos</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Hoteles</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Pagos</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Experiencias</a>
+        </nav>
+        <div class="mt-auto">
+            <a href="/" class="block text-gray-500 hover:text-gold text-sm">Volver al sitio</a>
+        </div>
+    </aside>
+    <!-- Contenido principal -->
+    <main class="flex-1 p-10">
+        <div class="mb-8">
+            <a href="{% url 'admin_users_list' %}" class="text-gold hover:text-gold-600">← Volver a usuarios</a>
+        </div>
+        <h1 class="text-3xl font-bold text-gold mb-8">Eliminar Usuario</h1>
+        <div class="bg-gray-900 rounded-lg p-8 max-w-xl">
+            <p class="text-white mb-6">¿Estás seguro de que deseas eliminar al usuario <span class="text-gold font-semibold">{{ user_obj.get_full_name }}</span> (<span class="text-gray-400">{{ user_obj.email }}</span>)? Esta acción no se puede deshacer.</p>
+            <form method="post" class="flex space-x-4">
+                {% csrf_token %}
+                <button type="submit" class="btn-danger py-2 px-6 rounded-lg font-semibold">Eliminar</button>
+                <a href="{% url 'admin_user_detail' user_obj.id %}" class="btn-gold py-2 px-6 rounded-lg font-semibold">Cancelar</a>
+            </form>
+        </div>
+    </main>
+</div>
+{% endblock %} 

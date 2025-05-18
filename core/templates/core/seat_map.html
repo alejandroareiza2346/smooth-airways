@@ -1,0 +1,104 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Plano de Asientos</h2>
+    <div id="seat-map" class="d-flex flex-wrap justify-content-center">
+        <!-- Los asientos se renderizarán aquí dinámicamente -->
+    </div>
+    <div class="text-center mt-4">
+        <button id="confirm-selection" class="btn btn-primary" disabled>Confirmar Selección</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const flightId = new URLSearchParams(window.location.search).get('flight_id');
+        const seatMapContainer = document.getElementById('seat-map');
+        const confirmButton = document.getElementById('confirm-selection');
+        let selectedSeat = null;
+
+        if (!flightId) {
+            alert('ID del vuelo no proporcionado.');
+            return;
+        }
+
+        // Fetch seat map data
+        fetch(`/flights/seats/seat-map/?flight_id=${flightId}`)
+            .then(response => response.json())
+            .then(data => {
+                const seats = data.seat_map;
+                seats.forEach(seat => {
+                    const seatElement = document.createElement('div');
+                    seatElement.classList.add('seat', 'm-2', 'p-3', 'text-center');
+                    seatElement.textContent = seat.seat_number;
+                    seatElement.dataset.seatId = seat.id;
+                    seatElement.dataset.status = seat.status;
+
+                    if (seat.status === 'AVAILABLE') {
+                        seatElement.classList.add('available');
+                        seatElement.addEventListener('click', () => {
+                            document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+                            seatElement.classList.add('selected');
+                            selectedSeat = seat.id;
+                            confirmButton.disabled = false;
+                        });
+                    } else {
+                        seatElement.classList.add('unavailable');
+                    }
+
+                    seatMapContainer.appendChild(seatElement);
+                });
+            })
+            .catch(error => console.error('Error al cargar el plano de asientos:', error));
+
+        // Confirm seat selection
+        confirmButton.addEventListener('click', () => {
+            if (!selectedSeat) return;
+
+            fetch(`/flights/seats/${selectedSeat}/`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: 'RESERVED' })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Asiento reservado exitosamente.');
+                        window.location.reload();
+                    } else {
+                        alert('Error al reservar el asiento.');
+                    }
+                })
+                .catch(error => console.error('Error al reservar el asiento:', error));
+        });
+    });
+</script>
+
+<style>
+    .seat {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .seat.available {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .seat.unavailable {
+        background-color: #dc3545;
+        color: white;
+        cursor: not-allowed;
+    }
+
+    .seat.selected {
+        background-color: #ffc107;
+        color: black;
+    }
+</style>
+{% endblock %}

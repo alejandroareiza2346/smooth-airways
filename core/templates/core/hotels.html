@@ -1,0 +1,56 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Hoteles de Lujo - Smooth Airlines{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-black py-12">
+    <div class="container mx-auto px-4">
+        <h1 class="text-4xl font-bold text-gold mb-8">Hoteles de Lujo</h1>
+        
+        <!-- Hero Section -->
+        <div class="relative rounded-lg overflow-hidden mb-12 h-96">
+            <img src="{% static 'images/hero/luxury-hotel.jpg' %}" alt="Hotel de Lujo" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-black to-transparent flex items-center">
+                <div class="p-8 max-w-2xl">
+                    <h2 class="text-3xl font-bold text-gold mb-4">Alojamiento Exclusivo</h2>
+                    <p class="text-gray-300 text-lg mb-6">
+                        Descubre nuestra selección de los hoteles más exclusivos del mundo.
+                        Experimenta el lujo en cada detalle de tu estadía.
+                    </p>
+                    <a href="#" class="btn-gold px-6 py-3 rounded-lg inline-block">
+                        Explorar Hoteles
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="bg-gray-900 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gold mb-4">Ubicaciones Premium</h3>
+                <p class="text-gray-400">
+                    Los mejores hoteles en las ubicaciones más exclusivas del mundo.
+                </p>
+            </div>
+            <div class="bg-gray-900 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gold mb-4">Beneficios VIP</h3>
+                <p class="text-gray-400">
+                    Acceso a beneficios exclusivos y upgrades garantizados.
+                </p>
+            </div>
+            <div class="bg-gray-900 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gold mb-4">Concierge 24/7</h3>
+                <p class="text-gray-400">
+                    Servicio de conserjería personal disponible en todo momento.
+                </p>
+            </div>
+        </div>
+
+        <!-- Hotel Listings -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Hotel cards will be dynamically populated -->
+        </div>
+    </div>
+</div>
+{% endblock %}

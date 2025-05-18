@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Cuenta Bloqueada - Smooth Airlines{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-black">
+    <div class="bg-gray-900 rounded-lg shadow-lg p-10 max-w-lg text-center">
+        <h1 class="text-3xl font-bold text-gold mb-6">Cuenta Bloqueada</h1>
+        <p class="text-white mb-4">Has superado el número máximo de intentos de inicio de sesión permitidos.</p>
+        <p class="text-gray-400 mb-6">Por seguridad, tu cuenta ha sido bloqueada temporalmente.<br>Por favor, inténtalo de nuevo en unos minutos.</p>
+        <a href="/" class="btn-gold py-3 px-8 rounded-lg font-semibold">Volver al inicio</a>
+    </div>
+</div>
+{% endblock %} 

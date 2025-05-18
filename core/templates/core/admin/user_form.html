@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ user_obj.id|default:'Nuevo' }} Usuario - Panel de Administración{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-black flex">
+    <!-- Menú lateral -->
+    <aside class="w-64 bg-gray-900 p-6 flex flex-col space-y-6 min-h-screen">
+        <h2 class="text-2xl font-bold text-gold mb-8">Admin</h2>
+        <nav class="flex-1 space-y-4">
+            <a href="{% url 'admin_dashboard' %}" class="block text-gray-300 hover:text-gold">Dashboard</a>
+            <a href="{% url 'admin_users_list' %}" class="block text-gold font-semibold">Usuarios</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Vuelos</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Hoteles</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Pagos</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Experiencias</a>
+        </nav>
+        <div class="mt-auto">
+            <a href="/" class="block text-gray-500 hover:text-gold text-sm">Volver al sitio</a>
+        </div>
+    </aside>
+    <!-- Contenido principal -->
+    <main class="flex-1 p-10">
+        <div class="mb-8">
+            <a href="{% url 'admin_users_list' %}" class="text-gold hover:text-gold-600">← Volver a usuarios</a>
+        </div>
+        <h1 class="text-3xl font-bold text-gold mb-8">{{ user_obj.id|default:'Nuevo' }} Usuario</h1>
+        <div class="bg-gray-900 rounded-lg p-8 max-w-2xl">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                {% for field in form.visible_fields %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% if form.non_field_errors %}
+                <div class="text-red-500 text-sm">
+                    {{ form.non_field_errors.0 }}
+                </div>
+                {% endif %}
+                <div class="pt-6 border-t border-gray-800">
+                    <button type="submit" class="w-full btn-gold py-3 rounded-lg font-semibold">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+{% endblock %} 

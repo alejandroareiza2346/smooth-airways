@@ -1,0 +1,101 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Smooth Airlines{% endblock %}
+
+{% block content %}
+{% if is_admin %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gold mb-6">Panel de Administración</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-gray-800 p-6 rounded-lg text-center">
+            <h2 class="text-xl font-bold text-gold">Usuarios</h2>
+            <p class="text-3xl font-bold text-white">{{ total_users }}</p>
+            <a href="{% url 'admin_users_list' %}" class="text-gold hover:underline">Gestionar Usuarios</a>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg text-center">
+            <h2 class="text-xl font-bold text-gold">Aeronaves</h2>
+            <p class="text-3xl font-bold text-white">{{ total_aircrafts }}</p>
+            <a href="{% url 'aircraft_list' %}" class="text-gold hover:underline">Gestionar Aeronaves</a>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg text-center">
+            <h2 class="text-xl font-bold text-gold">Reservas</h2>
+            <p class="text-3xl font-bold text-white">{{ total_bookings }}</p>
+            <a href="#" class="text-gold hover:underline">Gestionar Reservas</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gold mb-6">Bienvenido, {{ user.first_name }}</h1>
+    
+    <!-- Nuevas tarjetas principales para los módulos de vuelos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Tarjeta de Vuelos Comerciales -->
+        <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-gold mb-4">Vuelos Comerciales</h2>
+                <p class="text-gray-300 mb-4">Busca y reserva vuelos comerciales con las mejores aerolíneas del mundo.</p>
+                <div class="flex flex-col space-y-2">
+                    <a href="{% url 'commercial_home' %}" class="inline-block bg-gold hover:bg-amber-600 text-black font-bold py-2 px-4 rounded transition duration-300 text-center">
+                        Buscar Vuelos
+                    </a>
+                    <a href="{% url 'user_commercial_flights' %}" class="inline-block bg-transparent border border-gold hover:bg-gold text-gold hover:text-black font-bold py-2 px-4 rounded transition duration-300 text-center">
+                        Mis Reservas
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tarjeta de Vuelos Privados -->
+        <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-gold mb-4">Vuelos Privados</h2>
+                <p class="text-gray-300 mb-4">Personaliza y reserva tu propio vuelo privado con nuestra flota premium.</p>
+                <div class="flex flex-col space-y-2">
+                    <a href="{% url 'charter_home' %}" class="inline-block bg-gold hover:bg-amber-600 text-black font-bold py-2 px-4 rounded transition duration-300 text-center">
+                        Explorar Aeronaves
+                    </a>
+                    <a href="{% url 'user_charter_bookings' %}" class="inline-block bg-transparent border border-gold hover:bg-gold text-gold hover:text-black font-bold py-2 px-4 rounded transition duration-300 text-center">
+                        Mis Reservas Privadas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Secciones originales -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <h2 class="text-xl font-bold text-gold">Próximos Vuelos</h2>
+            {% if upcoming_flights %}
+                <ul>
+                    {% for flight in upcoming_flights %}
+                    <li class="text-white">{{ flight.departure_time }} - {{ flight.destination }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-400">No tienes vuelos programados.</p>
+            {% endif %}
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <h2 class="text-xl font-bold text-gold">Servicios Activos</h2>
+            {% if active_services %}
+                <ul>
+                    {% for service in active_services %}
+                    <li class="text-white">{{ service.name }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-400">No tienes servicios activos.</p>
+            {% endif %}
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <h2 class="text-xl font-bold text-gold">Perfil</h2>
+            <a href="{% url 'core:profile' %}" class="text-gold hover:underline">Editar Perfil</a>
+            <a href="{% url 'core:password_reset' %}" class="text-gold hover:underline block mt-2">Restablecer Contraseña</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

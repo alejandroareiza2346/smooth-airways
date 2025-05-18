@@ -1,0 +1,309 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Inicio - Smooth Airlines{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    {% if user.is_staff or user.is_superuser %}
+    <!-- Vista para Administradores -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg shadow-xl p-8 mb-8">
+            <h1 class="text-4xl font-bold text-gold mb-4">Panel de Administración</h1>
+            <p class="text-gray-300 mb-6">Gestiona todos los aspectos de Smooth Airlines desde un solo lugar.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition duration-300">
+                    <h3 class="text-xl font-bold text-gold mb-3">Gestión de Vuelos</h3>
+                    <p class="text-gray-400 mb-4">Administra vuelos comerciales y privados.</p>
+                    <a href="{% url 'admin:index' %}" class="text-gold hover:text-amber-400">
+                        Acceder →
+                    </a>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition duration-300">
+                    <h3 class="text-xl font-bold text-gold mb-3">Usuarios</h3>
+                    <p class="text-gray-400 mb-4">Gestiona cuentas y permisos de usuarios.</p>
+                    <a href="{% url 'admin:accounts_user_changelist' %}" class="text-gold hover:text-amber-400">
+                        Acceder →
+                    </a>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition duration-300">
+                    <h3 class="text-xl font-bold text-gold mb-3">Reservas</h3>
+                    <p class="text-gray-400 mb-4">Supervisa y gestiona todas las reservas.</p>
+                    <a href="{% url 'admin:bookings_flightbooking_changelist' %}" class="text-gold hover:text-amber-400">
+                        Acceder →
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Estadísticas Rápidas -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-gray-800 rounded-lg p-4">
+                <p class="text-gray-400">Vuelos Hoy</p>
+                <p class="text-3xl font-bold text-gold">{{ flights_today }}</p>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4">
+                <p class="text-gray-400">Reservas Pendientes</p>
+                <p class="text-3xl font-bold text-gold">{{ pending_bookings }}</p>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4">
+                <p class="text-gray-400">Usuarios Activos</p>
+                <p class="text-3xl font-bold text-gold">{{ active_users }}</p>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4">
+                <p class="text-gray-400">Ingresos del Mes</p>
+                <p class="text-3xl font-bold text-gold">${{ monthly_revenue }}</p>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- Vista para Usuarios Autenticados -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Banner de Bienvenida Personalizado -->
+        <div class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-lg shadow-xl p-8 mb-8">
+            <h1 class="text-4xl font-bold text-gold mb-2">Bienvenido de nuevo, {{ user.first_name }}!</h1>
+            <p class="text-gray-300">¿Listo para tu próxima aventura?</p>
+        </div>
+
+        <!-- Acciones Rápidas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition duration-300">
+                <h2 class="text-2xl font-bold text-gold mb-4">Vuelos Comerciales</h2>
+                <p class="text-gray-400 mb-4">Encuentra los mejores precios en vuelos regulares a tu destino favorito.</p>
+                <div class="flex space-x-4">
+                    <a href="{% url 'commercial_home' %}" class="bg-gold hover:bg-amber-600 text-black font-bold py-2 px-6 rounded-full transition duration-300">
+                        Buscar Vuelos
+                    </a>
+                    <a href="{% url 'user_commercial_flights' %}" class="bg-transparent hover:bg-gray-700 text-gold border border-gold font-bold py-2 px-6 rounded-full transition duration-300">
+                        Mis Reservas
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition duration-300">
+                <h2 class="text-2xl font-bold text-gold mb-4">Vuelos Privados</h2>
+                <p class="text-gray-400 mb-4">Descubre nuestra flota exclusiva de jets privados para una experiencia única.</p>
+                <div class="flex space-x-4">
+                    <a href="{% url 'charter_home' %}" class="bg-gold hover:bg-amber-600 text-black font-bold py-2 px-6 rounded-full transition duration-300">
+                        Explorar Jets
+                    </a>
+                    <a href="{% url 'user_charter_bookings' %}" class="bg-transparent hover:bg-gray-700 text-gold border border-gold font-bold py-2 px-6 rounded-full transition duration-300">
+                        Mis Reservas
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Próximos Vuelos -->
+        {% if upcoming_flights %}
+        <div class="bg-gray-800 rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gold mb-4">Tus Próximos Vuelos</h2>
+            <div class="space-y-4">
+                {% for flight in upcoming_flights %}
+                <div class="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
+                    <div>
+                        <p class="text-white font-bold">{{ flight.origin_code }} → {{ flight.destination_code }}</p>
+                        <p class="text-sm text-gray-400">{{ flight.departure_time|date:"d M, Y H:i" }}</p>
+                    </div>
+                    <a href="{% url 'flight_detail' flight.id %}" class="text-gold hover:text-amber-400">
+                        Ver Detalles →
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% endif %}
+{% else %}
+<!-- Vista para Visitantes -->
+<div class="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <!-- Hero Section with Parallax Effect -->
+    <div class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="hero-background"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-6xl md:text-7xl font-bold text-gold mb-8 leading-tight">
+                    Viaja con Estilo en<br>Smooth Airlines
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed">
+                    Descubre una nueva forma de volar, donde el lujo<br class="hidden md:block">
+                    se encuentra con la comodidad y la exclusividad.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-6">
+                    <a href="{% url 'core:login' %}" class="bg-gold hover:bg-amber-600 text-black font-bold py-4 px-10 rounded-full transition-all duration-300 transform hover:scale-105">
+                        Iniciar Sesión
+                    </a>
+                    <a href="{% url 'core:register' %}" class="bg-transparent hover:bg-gray-800 text-gold border-2 border-gold font-bold py-4 px-10 rounded-full transition-all duration-300 transform hover:scale-105">
+                        Registrarse
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Características con Iconos Animados -->
+    <div class="py-20 bg-opacity-50 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="bg-gray-800 bg-opacity-50 p-8 rounded-2xl transform transition-all duration-300 hover:scale-105 hover:bg-opacity-70">
+                    <div class="text-gold mb-6 transform transition-all duration-500 hover:rotate-12">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gold mb-4 text-center">Vuelos Globales</h3>
+                    <p class="text-gray-300 text-center leading-relaxed">Conectamos más de 150 destinos exclusivos en todo el mundo, llevándote a las experiencias más extraordinarias.</p>
+                </div>
+
+                <div class="bg-gray-800 bg-opacity-50 p-8 rounded-2xl transform transition-all duration-300 hover:scale-105 hover:bg-opacity-70">
+                    <div class="text-gold mb-6 transform transition-all duration-500 hover:rotate-12">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gold mb-4 text-center">Máxima Calidad</h3>
+                    <p class="text-gray-300 text-center leading-relaxed">Servicio premium y atención personalizada en cada vuelo, superando tus expectativas en cada viaje.</p>
+                </div>
+
+                <div class="bg-gray-800 bg-opacity-50 p-8 rounded-2xl transform transition-all duration-300 hover:scale-105 hover:bg-opacity-70">
+                    <div class="text-gold mb-6 transform transition-all duration-500 hover:rotate-12">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gold mb-4 text-center">Mejores Precios</h3>
+                    <p class="text-gray-300 text-center leading-relaxed">Tarifas competitivas y programas de fidelización exclusivos diseñados para nuestros viajeros más exigentes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Destinos Destacados con Efecto Parallax -->
+    <div class="relative py-24 overflow-hidden">
+        <div class="absolute inset-0 bg-fixed bg-center bg-cover opacity-10" style="background-image: url('{% static 'images/destinations/Santorini, Grecia.jpg' %}');"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-5xl font-bold text-gold text-center mb-4">Destinos Destacados</h2>
+            <p class="text-xl text-gray-300 text-center mb-16 max-w-3xl mx-auto">
+                Descubre los destinos más exclusivos del mundo, donde el lujo y la aventura se encuentran
+            </p>
+            <div class="image-grid">
+                <div class="destination-card">
+                    <img src="{% static 'images/destinations/Bora Bora.jpg' %}" alt="Bora Bora" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Bora Bora</h3>
+                        <p class="card-description">Paraíso tropical en la Polinesia Francesa</p>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="{% static 'images/destinations/Santorini, Grecia.jpg' %}" alt="Santorini" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Santorini, Grecia</h3>
+                        <p class="card-description">Islas mágicas con vistas al mar Egeo</p>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="{% static 'images/destinations/Dubai, UAE.jpg' %}" alt="Dubai" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Dubai, UAE</h3>
+                        <p class="card-description">La ciudad del lujo y la innovación</p>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="{% static 'images/destinations/Monte Carlo, Mónaco.jpg' %}" alt="Monte Carlo" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Monte Carlo, Mónaco</h3>
+                        <p class="card-description">Elegancia y sofisticación en la Riviera Francesa</p>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="{% static 'images/destinations/Aspen, Colorado.jpg' %}" alt="Aspen" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Aspen, Colorado</h3>
+                        <p class="card-description">El destino de esquí más exclusivo</p>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="{% static 'images/destinations/Maldivas.jpg' %}" alt="Maldivas" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Maldivas</h3>
+                        <p class="card-description">Lujo y privacidad en el océano Índico</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nuestra Flota con Diseño Premium -->
+    <div class="relative py-24 bg-gray-900 bg-opacity-90">
+        <div class="absolute inset-0 bg-fixed bg-center bg-cover opacity-10" style="background-image: url('{% static 'images/jets/Boeing 787-8 Dreamliner.G11.watermarked.2k.png' %}');"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-5xl font-bold text-gold text-center mb-4">Nuestra Flota de Lujo</h2>
+            <p class="text-xl text-gray-300 text-center mb-16 max-w-3xl mx-auto">
+                Experimenta el máximo confort y elegancia en nuestra exclusiva flota de aeronaves
+            </p>
+            
+            <!-- Red de Aeropuertos -->
+            <h3 class="text-3xl font-bold text-white text-center mb-8">Red de Aeropuertos</h3>
+            <div class="image-grid mb-24">
+                <div class="aircraft-card">
+                    <img src="{% static 'images/aircraft/AeropuertoElDorado.jpg' %}" alt="Aeropuerto El Dorado" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Aeropuerto El Dorado</h3>
+                        <p class="card-description">Bogotá, Colombia</p>
+                    </div>
+                </div>
+                <div class="aircraft-card">
+                    <img src="{% static 'images/aircraft/Aeropuerto Internacional Benito Juárez.jpg' %}" alt="Aeropuerto CDMX" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Aeropuerto Internacional Benito Juárez</h3>
+                        <p class="card-description">Ciudad de México, México</p>
+                    </div>
+                </div>
+                <div class="aircraft-card">
+                    <img src="{% static 'images/aircraft/Aeropuerto Internacional Jorge Chávez.jpg' %}" alt="Aeropuerto Lima" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Aeropuerto Internacional Jorge Chávez</h3>
+                        <p class="card-description">Lima, Perú</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flota Privada -->
+            <h3 class="text-3xl font-bold text-white text-center mb-8">Nuestra Flota Privada</h3>
+            <div class="image-grid">
+                <div class="aircraft-card">
+                    <img src="{% static 'images/jets/Airbus ACJ320.G03.watermarked.2k.png' %}" alt="Airbus ACJ320" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Airbus ACJ320</h3>
+                        <p class="card-description">El pináculo del lujo aéreo corporativo</p>
+                    </div>
+                </div>
+                <div class="aircraft-card">
+                    <img src="{% static 'images/jets/Boeing 787-8 Dreamliner.G11.watermarked.2k.png' %}" alt="Boeing 787-8" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">Boeing 787-8 Dreamliner</h3>
+                        <p class="card-description">Experiencia VIP incomparable</p>
+                    </div>
+                </div>
+                <div class="aircraft-card">
+                    <img src="{% static 'images/jets/AgustaWestland AW139 Helicopter.H03.watermarked.2k.png' %}" alt="AgustaWestland AW139" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">AgustaWestland AW139</h3>
+                        <p class="card-description">Helicóptero ejecutivo de última generación</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

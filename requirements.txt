@@ -1,0 +1,34 @@
+Django==5.0.1
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+django-allauth>=0.60.1
+psycopg2-binary>=2.9.9
+python-dotenv>=1.0.1
+Pillow==11.2.1
+stripe>=8.4.0
+django-storages==1.14.2
+boto3==1.34.14
+django-filter==23.5
+dj-rest-auth==5.0.2
+django-environ>=0.11.2
+gunicorn==21.2.0
+whitenoise>=6.6.0
+python-dateutil==2.8.2
+django-crispy-forms==2.1
+crispy-tailwind==0.5.0
+django-tailwind>=3.8.0
+drf-yasg==1.21.10
+coreapi==2.3.3
+pyyaml==6.0.2
+dj-database-url==2.1.0
+django-axes>=6.3.0
+
+# Nuevas dependencias para módulos de vuelo
+django-money==3.4.0          # Para manejo de precios con moneda
+django-imagekit==5.0.0       # Procesamiento avanzado de imágenes
+WeasyPrint==60.2             # Generación de PDF para boletos e itinerarios
+django-import-export==3.3.3  # Importación/exportación de datos
+django-leaflet==0.29.0       # Mapas para visualizar rutas de vuelo
+geopy==2.4.1                 # Cálculos de distancia geoespacial
+django-bootstrap5==23.4      # Para mejorar los formularios UI
+crispy-bootstrap5==0.7     # Integración de crispy con Bootstrap 5

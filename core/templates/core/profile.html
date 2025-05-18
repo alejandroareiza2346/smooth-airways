@@ -1,0 +1,117 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Mi Perfil - Smooth Airlines{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-black py-12">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-gold mb-8">Mi Perfil</h2>
+            
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                <div class="p-4 {% if message.tags == 'error' %}bg-red-900{% else %}bg-green-900{% endif %} text-white rounded-lg">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="bg-gray-900 rounded-lg p-8">
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Información personal -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-gold mb-4">Información Personal</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="id_first_name" class="block text-sm font-medium text-gray-300 mb-2">
+                                        Nombre
+                                    </label>
+                                    {{ form.first_name }}
+                                </div>
+                                <div>
+                                    <label for="id_last_name" class="block text-sm font-medium text-gray-300 mb-2">
+                                        Apellido
+                                    </label>
+                                    {{ form.last_name }}
+                                </div>
+                                <div>
+                                    <label for="id_phone_number" class="block text-sm font-medium text-gray-300 mb-2">
+                                        Teléfono
+                                    </label>
+                                    {{ form.phone_number }}
+                                </div>
+                                <div>
+                                    <label for="id_date_of_birth" class="block text-sm font-medium text-gray-300 mb-2">
+                                        Fecha de Nacimiento
+                                    </label>
+                                    {{ form.date_of_birth }}
+                                </div>
+                                <div>
+                                    <label for="id_nationality" class="block text-sm font-medium text-gray-300 mb-2">
+                                        Nacionalidad
+                                    </label>
+                                    {{ form.nationality }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Preferencias -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-gold mb-4">Preferencias</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="id_preferred_language" class="block text-sm font-medium text-gray-300 mb-2">
+                                        Idioma Preferido
+                                    </label>
+                                    {{ form.preferred_language }}
+                                </div>
+                                <div>
+                                    <label for="id_dietary_preferences" class="block text-sm font-medium text-gray-300 mb-2">
+                                        Preferencias Alimentarias
+                                    </label>
+                                    {{ form.dietary_preferences }}
+                                </div>
+                            </div>
+                            
+                            <h3 class="text-xl font-semibold text-gold mb-4 mt-8">Contacto de Emergencia</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="id_emergency_contact_name" class="block text-sm font-medium text-gray-300 mb-2">
+                                        Nombre
+                                    </label>
+                                    {{ form.emergency_contact_name }}
+                                </div>
+                                <div>
+                                    <label for="id_emergency_contact_phone" class="block text-sm font-medium text-gray-300 mb-2">
+                                        Teléfono
+                                    </label>
+                                    {{ form.emergency_contact_phone }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-6 border-t border-gray-800">
+                        <button type="submit" class="w-full btn-gold py-3 rounded-lg font-semibold">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    input, textarea, select {
+        @apply w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-gold;
+    }
+</style>
+{% endblock %} 

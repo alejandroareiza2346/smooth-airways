@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifica tu Email - Smooth Airlines</title>
+    <link rel="stylesheet" href="{% static 'css/email.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Smooth Airlines</h1>
+            <p>Verificación de correo electrónico</p>
+        </div>
+        
+        <div class="content">
+            <h2>¡Hola {{ user.first_name }}!</h2>
+            <p>Gracias por solicitar un nuevo correo de verificación. Para activar tu cuenta, por favor haz clic en el siguiente enlace:</p>
+            
+            <div class="verify-button">
+                <a href="{{ verify_url }}">Verificar Correo Electrónico</a>
+            </div>
+            
+            <p>Si no solicitaste este correo, puedes ignorarlo de forma segura.</p>
+            
+            <p>El enlace expirará en 24 horas.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Si tienes alguna pregunta, no dudes en contactarnos:</p>
+            <p>contact@smoothairlines.com | +1 (555) 123-4567</p>
+        </div>
+    </div>
+</body>
+</html>

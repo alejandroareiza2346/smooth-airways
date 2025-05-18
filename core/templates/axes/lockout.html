@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Cuenta Bloqueada - Smooth Airlines{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-black py-12">
+    <div class="container mx-auto px-4">
+        <div class="max-w-md mx-auto bg-gray-900 rounded-lg p-8">
+            <h2 class="text-2xl font-bold text-gold mb-6 text-center">Cuenta Bloqueada</h2>
+            
+            <div class="text-center text-gray-300 mb-6">
+                <p class="mb-4">Has superado el número máximo de intentos de inicio de sesión permitidos.</p>
+                <p class="mb-4">Por seguridad, tu cuenta ha sido bloqueada temporalmente.</p>
+                <p>Por favor, intenta alguna de las siguientes opciones:</p>
+            </div>
+
+            <div class="space-y-4">
+                <a href="{% url 'unlock_account' %}" 
+                   class="block w-full text-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-gold hover:bg-gold-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold">
+                    Desbloquear mi cuenta
+                </a>
+
+                <a href="{% url 'password_reset' %}" 
+                   class="block w-full text-center py-2 px-4 border border-gold rounded-md shadow-sm text-sm font-medium text-gold bg-transparent hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold">
+                    Restablecer mi contraseña
+                </a>
+
+                <a href="{% url 'login' %}" 
+                   class="block w-full text-center py-2 px-4 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-transparent hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    Volver al inicio de sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

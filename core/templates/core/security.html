@@ -1,0 +1,57 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Seguridad y Transporte - Smooth Airlines{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-black py-12">
+    <div class="container mx-auto px-4">
+        <h1 class="text-4xl font-bold text-gold mb-8">Seguridad y Transporte de Lujo</h1>
+        
+        <!-- Hero Section -->
+        <div class="relative rounded-lg overflow-hidden mb-12 h-96">
+            <img src="{% static 'images/hero/security.jpg' %}" alt="Seguridad y Transporte" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-black to-transparent flex items-center">
+                <div class="p-8 max-w-2xl">
+                    <h2 class="text-3xl font-bold text-gold mb-4">Seguridad Sin Compromisos</h2>
+                    <p class="text-gray-300 text-lg mb-6">
+                        Servicio de seguridad privada y transporte de lujo para garantizar tu tranquilidad
+                        y comodidad en cada viaje.
+                    </p>
+                    <a href="#" class="btn-gold px-6 py-3 rounded-lg inline-block">
+                        Solicitar Servicio
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="bg-gray-900 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gold mb-4">Escoltas Privados</h3>
+                <p class="text-gray-400">
+                    Personal de seguridad altamente capacitado y discreto para tu protección.
+                </p>
+            </div>
+            <div class="bg-gray-900 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gold mb-4">Vehículos Blindados</h3>
+                <p class="text-gray-400">
+                    Flota de vehículos de lujo con las más altas especificaciones de seguridad.
+                </p>
+            </div>
+            <div class="bg-gray-900 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gold mb-4">Servicio 24/7</h3>
+                <p class="text-gray-400">
+                    Disponibilidad permanente para todas tus necesidades de seguridad y transporte.
+                </p>
+            </div>
+        </div>
+
+        <!-- Vehicle Fleet -->
+        <h2 class="text-3xl font-bold text-gold mb-8">Nuestra Flota</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Vehicle cards will be dynamically populated -->
+        </div>
+    </div>
+</div>
+{% endblock %}

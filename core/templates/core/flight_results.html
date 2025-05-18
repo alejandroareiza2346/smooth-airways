@@ -1,0 +1,278 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Resultados de Vuelos - Smooth Airlines{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gold mb-6">Resultados de Búsqueda</h1>
+    
+    <!-- Parámetros de búsqueda -->
+    <div class="bg-gray-800 p-4 rounded-lg mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <p class="text-white">
+                    <span class="text-gold font-bold">{{ search_params.origin }}</span> a 
+                    <span class="text-gold font-bold">{{ search_params.destination }}</span>
+                </p>
+                <p class="text-white text-sm">
+                    {{ search_params.departure_date }} 
+                    {% if search_params.return_date %}
+                        - {{ search_params.return_date }} (Ida y vuelta)
+                    {% else %}
+                        (Solo ida)
+                    {% endif %}
+                </p>
+                <p class="text-white text-sm">
+                    {{ search_params.passengers }} pasajero(s), 
+                    {{ search_params.cabin_class_display }}
+                </p>
+            </div>
+            <a href="{% url 'commercial_home' %}" class="mt-4 md:mt-0 bg-transparent hover:bg-gold text-gold hover:text-black border border-gold font-bold py-2 px-4 rounded transition duration-300">
+                Modificar Búsqueda
+            </a>
+        </div>
+    </div>
+    
+    <!-- Filtros -->
+    <div class="mb-8">
+        <div class="bg-gray-800 p-4 rounded-lg">
+            <h2 class="text-xl font-bold text-gold mb-4">Filtros</h2>
+            <form id="filter-form" method="get" class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+                    <div class="sm:w-1/4">
+                        <label class="block text-white mb-2" for="price-range">Precio Máximo</label>
+                        <input type="range" name="max_price" min="0" max="2000" value="{{ request.GET.max_price|default:2000 }}" 
+                               class="w-full" id="price-range" title="Seleccione el precio máximo">
+                        <div class="flex justify-between text-sm text-white">
+                            <span>$0</span>
+                            <span id="price-value">${{ request.GET.max_price|default:2000 }}</span>
+                            <span>$2000</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sm:w-1/4">
+                        <label class="block text-white mb-2" for="airline">Aerolíneas</label>
+                        <select name="airline" id="airline" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" title="Seleccione una aerolínea">
+                            <option value="">Todas</option>
+                            {% for airline in airlines %}
+                                <option value="{{ airline }}" {% if request.GET.airline == airline %}selected{% endif %}>{{ airline }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="sm:w-1/4">
+                        <label class="block text-white mb-2" for="stops">Escalas</label>
+                        <select name="stops" id="stops" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" title="Seleccione el número de escalas">
+                            <option value="">Cualquiera</option>
+                            <option value="0" {% if request.GET.stops == '0' %}selected{% endif %}>Directo</option>
+                            <option value="1" {% if request.GET.stops == '1' %}selected{% endif %}>1 Escala</option>
+                            <option value="2" {% if request.GET.stops == '2' %}selected{% endif %}>2+ Escalas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="sm:w-1/4">
+                        <label class="block text-white mb-2" for="sort_by">Ordenar por</label>
+                        <select name="sort_by" id="sort_by" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" title="Seleccione el criterio de ordenamiento">
+                            <option value="price_asc" {% if request.GET.sort_by == 'price_asc' %}selected{% endif %}>Precio: menor a mayor</option>
+                            <option value="price_desc" {% if request.GET.sort_by == 'price_desc' %}selected{% endif %}>Precio: mayor a menor</option>
+                            <option value="duration" {% if request.GET.sort_by == 'duration' %}selected{% endif %}>Duración</option>
+                            <option value="departure" {% if request.GET.sort_by == 'departure' %}selected{% endif %}>Hora de salida</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-gold hover:bg-amber-600 text-black font-bold py-2 px-4 rounded transition duration-300">
+                        Aplicar Filtros
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Resultados -->
+    <div class="space-y-6">
+        {% if flights %}
+            {% for flight in flights %}
+                <div class="bg-gray-800 rounded-lg p-6 hover:shadow-lg transition duration-300 border border-transparent hover:border-gold">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between">
+                        <!-- Información de Aerolínea -->
+                        <div class="lg:w-1/4 mb-4 lg:mb-0">
+                            <div class="flex items-center">
+                                {% if flight.airline_logo %}
+                                    <img src="{{ flight.airline_logo.url }}" alt="{{ flight.airline }}" class="w-12 h-12 object-contain mr-3">
+                                {% else %}
+                                    <div class="w-12 h-12 bg-gray-700 flex items-center justify-center rounded-full mr-3">
+                                        <span class="text-xl font-bold text-gold">{{ flight.airline|slice:":1" }}</span>
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">{{ flight.airline }}</h3>
+                                    <p class="text-gray-400 text-sm">{{ flight.flight_number }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Horarios y Ruta -->
+                        <div class="lg:w-2/5 mb-4 lg:mb-0">
+                            <div class="flex items-center">
+                                <div class="text-center mr-4">
+                                    <p class="text-xl font-bold text-white">{{ flight.departure_time|date:"H:i" }}</p>
+                                    <p class="text-gray-400 text-sm">{{ flight.origin_code }}</p>
+                                </div>
+                                <div class="flex-1 px-4">
+                                    <div class="relative">
+                                        <div class="h-1 bg-gray-600 w-full absolute top-1/2 transform -translate-y-1/2"></div>
+                                        {% if flight.stops_count > 0 %}
+                                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 px-2">
+                                                <span class="text-xs text-gold">{{ flight.stops_count }} escala(s)</span>
+                                            </div>
+                                        {% endif %}
+                                        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-gold rounded-full"></div>
+                                        <div class="absolute right-0 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-gold rounded-full"></div>
+                                    </div>
+                                    <p class="text-center text-gray-400 text-sm mt-2">{{ flight.duration|time:"G\h i\m" }}</p>
+                                </div>
+                                <div class="text-center ml-4">
+                                    <p class="text-xl font-bold text-white">{{ flight.arrival_time|date:"H:i" }}</p>
+                                    <p class="text-gray-400 text-sm">{{ flight.destination_code }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Precio y Acción -->
+                        <div class="lg:w-1/4 flex flex-col items-center">
+                            <p class="text-3xl font-bold text-gold">${{ flight.get_price_for_class }}</p>
+                            <p class="text-gray-400 text-sm mb-4">por pasajero</p>
+                            <a href="{% url 'commercial_flight_detail' flight.id %}" 
+                               class="bg-gold hover:bg-amber-600 text-black font-bold py-2 px-6 rounded-full transition duration-300">
+                                Seleccionar
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Detalles Adicionales (expandibles) -->
+                    <div class="mt-4 pt-4 border-t border-gray-700">
+                        <button class="text-gold hover:text-amber-400 focus:outline-none flex items-center toggle-details" data-target="details-{{ flight.id }}">
+                            <span class="mr-2">Ver detalles</span>
+                            <svg class="w-4 h-4 transform transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                        <div id="details-{{ flight.id }}" class="hidden mt-4 space-y-3">
+                            <!-- Detalles del vuelo -->
+                            <div class="flex flex-wrap">
+                                <div class="w-full md:w-1/3 mb-3 md:mb-0">
+                                    <span class="text-gray-400">Avión:</span>
+                                    <p class="text-white">{{ flight.aircraft_type }}</p>
+                                </div>
+                                <div class="w-full md:w-1/3 mb-3 md:mb-0">
+                                    <span class="text-gray-400">Servicios a bordo:</span>
+                                    <p class="text-white">
+                                        {% if flight.has_wifi %}<span class="mr-2">WiFi</span>{% endif %}
+                                        {% if flight.has_entertainment %}<span class="mr-2">Entretenimiento</span>{% endif %}
+                                        {% if flight.has_power_outlets %}<span class="mr-2">Enchufes</span>{% endif %}
+                                        {% if flight.has_complimentary_meal %}<span>Comidas</span>{% endif %}
+                                    </p>
+                                </div>
+                                <div class="w-full md:w-1/3">
+                                    <span class="text-gray-400">Estado:</span>
+                                    <p class="text-white">{{ flight.get_status_display }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Detalles de escalas si las hay -->
+                            {% if flight.stops_count > 0 and flight.stops_detail %}
+                                <div class="mt-4">
+                                    <h4 class="text-gold font-bold mb-2">Escalas:</h4>
+                                    <div class="space-y-2">
+                                        {% for stop in flight.stops_detail %}
+                                            <div class="bg-gray-700 p-3 rounded">
+                                                <p class="text-white">{{ stop.airport }} ({{ stop.code }})</p>
+                                                <p class="text-sm text-gray-400">
+                                                    Llegada: {{ stop.arrival_time }} - 
+                                                    Salida: {{ stop.departure_time }} - 
+                                                    Tiempo de espera: {{ stop.layover_time }}
+                                                </p>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <!-- Paginación -->
+            {% if is_paginated %}
+                <div class="mt-8 flex justify-center">
+                    <div class="flex space-x-1">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">Anterior</a>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <a href="?page={{ num }}" class="px-4 py-2 bg-gold text-black rounded">{{ num }}</a>
+                            {% else %}
+                                <a href="?page={{ num }}" class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">Siguiente</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="bg-gray-800 rounded-lg p-12 text-center">
+                <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 14h.01M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"></path>
+                </svg>
+                <h3 class="mt-4 text-lg font-semibold text-white">No se encontraron vuelos</h3>
+                <p class="mt-2 text-gray-400">Intente con diferentes fechas o destinos</p>
+                <a href="{% url 'commercial_home' %}" class="mt-6 inline-block bg-gold hover:bg-amber-600 text-black font-bold py-2 px-6 rounded transition duration-300">
+                    Nueva Búsqueda
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Script para controlar el slider de precio
+    document.addEventListener('DOMContentLoaded', function() {
+        const priceRange = document.getElementById('price-range');
+        const priceValue = document.getElementById('price-value');
+        
+        if (priceRange && priceValue) {
+            priceRange.addEventListener('input', function() {
+                priceValue.textContent = '$' + this.value;
+            });
+        }
+        
+        // Toggle para mostrar/ocultar detalles
+        const toggleButtons = document.querySelectorAll('.toggle-details');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const targetElement = document.getElementById(targetId);
+                const icon = this.querySelector('svg');
+                
+                if (targetElement.classList.contains('hidden')) {
+                    targetElement.classList.remove('hidden');
+                    icon.classList.add('rotate-180');
+                    this.querySelector('span').textContent = 'Ocultar detalles';
+                } else {
+                    targetElement.classList.add('hidden');
+                    icon.classList.remove('rotate-180');
+                    this.querySelector('span').textContent = 'Ver detalles';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

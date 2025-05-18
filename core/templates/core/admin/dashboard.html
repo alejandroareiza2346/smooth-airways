@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Panel de Administración - Smooth Airlines{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-black flex">
+    <!-- Menú lateral -->
+    <aside class="w-64 bg-gray-900 p-6 flex flex-col space-y-6 min-h-screen">
+        <h2 class="text-2xl font-bold text-gold mb-8">Admin</h2>
+        <nav class="flex-1 space-y-4">
+            <a href="{% url 'admin_dashboard' %}" class="block text-gray-300 hover:text-gold font-semibold">Dashboard</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Usuarios</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Vuelos</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Hoteles</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Pagos</a>
+            <a href="#" class="block text-gray-300 hover:text-gold">Experiencias</a>
+        </nav>
+        <div class="mt-auto">
+            <a href="/" class="block text-gray-500 hover:text-gold text-sm">Volver al sitio</a>
+        </div>
+    </aside>
+    <!-- Contenido principal -->
+    <main class="flex-1 p-10">
+        <h1 class="text-3xl font-bold text-gold mb-8">Panel de Administración</h1>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-gray-800 rounded-lg p-6 text-center">
+                <div class="text-gold text-2xl font-bold mb-2">Usuarios</div>
+                <div class="text-white text-3xl font-bold">-</div>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-6 text-center">
+                <div class="text-gold text-2xl font-bold mb-2">Vuelos</div>
+                <div class="text-white text-3xl font-bold">-</div>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-6 text-center">
+                <div class="text-gold text-2xl font-bold mb-2">Pagos</div>
+                <div class="text-white text-3xl font-bold">-</div>
+            </div>
+        </div>
+        <div class="bg-gray-900 rounded-lg p-8">
+            <h2 class="text-xl font-semibold text-gold mb-4">Bienvenido al panel de administración</h2>
+            <p class="text-gray-300">Desde aquí puedes gestionar usuarios, vuelos, hoteles, pagos y experiencias exclusivas.</p>
+        </div>
+    </main>
+</div>
+{% endblock %} 

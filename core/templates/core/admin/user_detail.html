@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Detalles del Usuario - Smooth Airlines{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gold mb-6">Detalles del Usuario</h1>
+    <div class="bg-gray-800 p-6 rounded-lg">
+        <p><strong>Nombre:</strong> {{ user_obj.first_name }} {{ user_obj.last_name }}</p>
+        <p><strong>Email:</strong> {{ user_obj.email }}</p>
+        <p><strong>Rol:</strong> {{ user_obj.role }}</p>
+        <p><strong>Activo:</strong> {{ user_obj.is_active|yesno:"Sí,No" }}</p>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'admin_users_edit' user_obj.pk %}" class="btn-gold px-4 py-2 rounded">Editar</a>
+        <a href="{% url 'admin_users_list' %}" class="text-gray-400 hover:text-gold ml-4">Volver a la lista</a>
+    </div>
+</div>
+{% endblock %}
