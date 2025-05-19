@@ -17,14 +17,10 @@ A luxury private airline platform offering exclusive charter flights, VIP servic
 - Django 5.0
 - Django REST Framework
 - PostgreSQL
-- JWT Authentication
+- Authentication
 - Stripe Payment Integration
 
-### Frontend
-- React
-- Tailwind CSS
-- Redux Toolkit
-- React Query
+
 
 ## Setup Instructions
 
@@ -60,13 +56,6 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-### Frontend Setup
-
-1. Install dependencies:
-```bash
-cd frontend
-npm install
-```
 
 2. Start development server:
 ```bash
@@ -103,4 +92,4 @@ This project is proprietary and confidential.
 
 ## Support
 
-For support, email support@smooth-airlines.com or contact our 24/7 concierge service. 
+For support Alejandro.workspace@outlook.com 
